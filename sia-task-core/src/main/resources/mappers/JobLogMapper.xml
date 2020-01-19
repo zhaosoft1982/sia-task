@@ -46,7 +46,7 @@
   </resultMap>
 
   <resultMap id="countGroupsJobLogsMap" type="java.util.Map">
-    <result column="groups"  property="groups" jdbcType="VARCHAR"/>
+    <result column="job_group"  property="groups" jdbcType="VARCHAR"/>
     <result column="job_log_count"  property="jobLogCount" jdbcType="VARCHAR"/>
   </resultMap>
 
@@ -153,6 +153,9 @@
       <if test="jobId != null" >
         job_id,
       </if>
+      <if test="traceId != null" >
+        trace_id,
+      </if>
       <if test="jobTriggerCode != null" >
         job_trigger_code,
       </if>
@@ -179,6 +182,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="jobId != null" >
         #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="traceId != null" >
+        #{traceId,jdbcType=VARCHAR},
       </if>
       <if test="jobTriggerCode != null" >
         #{jobTriggerCode,jdbcType=VARCHAR},
@@ -246,7 +252,7 @@
 
   <select id="selectCountGroupsJobLogs" resultMap="countGroupsJobLogsMap" parameterType="java.lang.String" >
     SELECT
-    bj.job_group AS groups,
+    bj.job_group AS job_group,
     COUNT(DISTINCT jl.job_log_id) AS job_log_count
     FROM skyworld_job_log jl
     RIGHT JOIN skyworld_basic_job bj ON bj.job_id = jl.job_id
@@ -261,8 +267,12 @@
   <if test="jobGroup != null and jobGroup != '' ">
       and bj.job_group = #{jobGroup,jdbcType=VARCHAR}
   </if>
-    GROUP BY groups
-    ORDER BY groups ASC,job_log_count DESC
+    GROUP BY job_group
+    ORDER BY job_group ASC,job_log_count DESC
+  </select>
+
+  <select id="selectJobLogIdByTraceId" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select sjl.job_log_id jobLogId from skyworld_job_log sjl where sjl.trace_id = #{traceId,jdbcType=VARCHAR}
   </select>
 
 </mapper>

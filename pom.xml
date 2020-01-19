@@ -10,11 +10,11 @@
     <version>1.0.0</version>
 
     <modules>
-        <module>sia-task-build-component</module>
         <module>sia-task-config</module>
         <module>sia-task-core</module>
         <module>sia-task-hunter</module>
         <module>sia-task-scheduler</module>
+        <module>sia-task-intask</module>
     </modules>
 
     <properties>

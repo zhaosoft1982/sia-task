@@ -56,14 +56,14 @@ public class WebJobController {
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/runOnce/{jobGroupName}/{jobKey}",method = RequestMethod.GET)
+    @RequestMapping(value = "/runOnce/{jobGroupName}/{jobKey}",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public String runOnce(@PathVariable String jobGroupName, @PathVariable String jobKey) {
         if (StringHelper.isEmpty(jobGroupName) || StringHelper.isEmpty(jobKey)) {
             return JSONHelper.toString(Constants.FAIL);
         }
         try {
-            boolean status = basicJobService.runOnce(jobGroupName, jobKey);
+            boolean status = basicJobService.runOnceJobKey(jobGroupName, jobKey);
             return JSONHelper.toString(status);
         } catch (SchedulerException e) {
             LOGGER.error(Constants.LOG_PREFIX + " runOnce jobs Exception : ", e);
